@@ -1,6 +1,7 @@
 'use client';
 
 
+import tokenGenerator from "@/modules/auth/token";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -9,11 +10,33 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPages = async () => {
+      const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN;
+
+      if(!API_TOKEN) {
+        console.error('API_TOKEN is not set');
+        return;
+      }
+
+      const TokenGenerator = new tokenGenerator(API_TOKEN)
+
+      const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+
+      if(!API_KEY) {
+        console.error('API_KEY is not set');
+        return;
+      }
+      const bearer = await TokenGenerator.generateToken(API_KEY)
       try {
-        const response = await fetch('http://localhost:3000/api/pages');
+        const response = await fetch('http://localhost:3000/api/pages', {
+          headers: {
+            Authorization: `Bearer ${bearer}` // Include the bearer token in the Authorization header
+          }
+        });
+
         if (!response.ok) {
           throw new Error('Failed to fetch pages');
         }
+
         const data = await response.json();
         console.log(data);
         setPages(data);
@@ -31,8 +54,8 @@ export default function Home() {
       <ul>
         <li>Below you can see the names of pages in the database.</li>
         <ol>
-          {pages.map((page: any) => (
-            <li key={page.id}>{page.title}</li>
+          {pages.map((page: any, i) => (
+            <li key={i}>{page.title}</li>
           ))}
         </ol>
       </ul>

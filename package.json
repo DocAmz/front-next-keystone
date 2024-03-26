@@ -9,12 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "crypto-js": "^4.2.0",
+    "jose": "^5.2.3",
+    "jsonwebtoken": "^9.0.2",
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",
     "signale": "^1.4.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
